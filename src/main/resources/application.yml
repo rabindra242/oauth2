@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: OAuth2 Local
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: 7fd4344a4f5a21a38196
+            client-secret: c39367e51649db5e4cff8b157b1ca66e96baa7a6
+          google:
+            client-id: 837951214916-bgv8eulnacb6g1lujpdco67l316itpf1.apps.googleusercontent.com
+            client-secret: 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
+
+
+
