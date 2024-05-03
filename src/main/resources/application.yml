@@ -11,6 +11,11 @@ spring:
           google:
             client-id: 837951214916-bgv8eulnacb6g1lujpdco67l316itpf1.apps.googleusercontent.com
             client-secret: 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
+            scope:
+              - openid
+              - profile
+              - email
+            client-name: google
 
 
 

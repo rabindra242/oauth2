@@ -1,5 +1,6 @@
 package com.example.oauth2backend.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,18 +13,20 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final SuccessHandler successHandler;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return  httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .cors(cors->cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth->{
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> {
                     auth.anyRequest().authenticated();
                 })
-                .oauth2Login(oauth2->{
+                .oauth2Login(oauth2 -> {
+                    oauth2.successHandler(successHandler);
                 })
-
                 .build();
     }
 
@@ -34,7 +37,7 @@ public class SecurityConfig {
         configuration.setAllowedMethods(Arrays.asList("GET","POST"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/oauth2/authorization/google", configuration);
         return urlBasedCorsConfigurationSource;
     }
 
