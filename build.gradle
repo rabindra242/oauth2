@@ -30,6 +30,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.5.Final'
+    // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'
+
 }
 
 tasks.named('test') {
