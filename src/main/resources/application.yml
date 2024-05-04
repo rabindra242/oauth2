@@ -16,6 +16,14 @@ spring:
               - profile
               - email
             client-name: google
+  datasource:
+    url: jdbc:mysql://localhost:3306/userdb
+    username: root
+    password: Rabin@123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 
 

@@ -1,5 +1,6 @@
 package com.example.oauth2backend.config;
 
+import com.example.oauth2backend.utill.mapper.RequestResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,5 +41,6 @@ public class SecurityConfig {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/oauth2/authorization/google", configuration);
         return urlBasedCorsConfigurationSource;
     }
+
 
 }

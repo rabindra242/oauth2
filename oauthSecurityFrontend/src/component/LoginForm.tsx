@@ -21,30 +21,41 @@ export default function LoginForm() {
 
     // const handleGoogleLogin = async () => {
     //     try {
-    //         // Make a request to your backend server to initiate Google login
+    //
     //         const response = await fetch('http://localhost:8080/oauth2/authorization/google',{
     //             mode:"no-cors"
     //         });
+    //         console.log(response)
+    //         // window.location.href= response
     //
     //         // Check if the response was successful
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not ok');
-    //         }
-    //
-    //         // Extract the JSON response body
-    //         const responseData = await response.json();
-    //
-    //         // Assuming responseData contains the redirect URL from the backend
-    //         if (responseData.redirectUrl) {
-    //             // Redirect to the URL received from the backend
-    //             window.location.href = responseData.redirectUrl;
-    //         } else {
-    //             console.error("Redirect URL not found in response");
-    //         }
+    //     //     if (!response.ok) {
+    //     //         throw new Error('Network response was not ok');
+    //     //     }
+    //     //
+    //     //     // Extract the JSON response body
+    //     //     const responseData = await response.json();
+    //     //
+    //     //     // Assuming responseData contains the redirect URL from the backend
+    //     //     if (responseData.redirectUrl) {
+    //     //         // Redirect to the URL received from the backend
+    //     //         window.location.href = responseData.redirectUrl;
+    //     //     } else {
+    //     //         console.error("Redirect URL not found in response");
+    //     //     }
     //     } catch (error) {
     //         console.error("Error initiating Google Login:", error);
-    //     }
-    // };
+    //      }
+    // }
+    const handleGithubLogin = async () => {
+        try {
+            // Handle the response and redirect to the expected URL
+            const redirectUrl = 'http://localhost:8080/oauth2/authorization/github';
+            window.location.replace(redirectUrl);
+        } catch (error) {
+            console.error('Error initiating Google Login:', error);
+        }
+    };
 
     const handleGoogleLogin = async () => {
         try {
@@ -72,6 +83,9 @@ export default function LoginForm() {
                                     <p className="lead fw-normal mb-0 me-3">Sign in with</p>
                                     <Button color='google' onClick={handleGoogleLogin}>
                                         <Icon name='google'/> Google
+                                    </Button>
+                                    <Button color='github' onClick={handleGithubLogin}>
+                                        <Icon name='github'/> Github
                                     </Button>
                                 </div>
                                 <div className="divider d-flex align-items-center my-4">
