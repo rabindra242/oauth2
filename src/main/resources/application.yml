@@ -17,7 +17,7 @@ spring:
               - email
             client-name: google
   datasource:
-    url: jdbc:mysql://localhost:3306/userdb
+    url: jdbc:mysql://localhost:3306/securityDBS
     username: root
     password: Rabin@123
 

@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static com.example.oauth2backend.utill.constrains.Message.USER_SAVED;
 
 @Service
@@ -18,18 +20,29 @@ public class UserServiceImpl implements UserService{
 
 
     private final UserRepository userRepository;
+
     @Override
-    public ResponseApi saveUser(UserRequestDto userRequestDto) {
-        ResponseApi responseApi= new ResponseApi<>();
-//        var user=UserEntity.builder()
-//                .email(userRequestDto.getEmail())
-//                .firstName(userRequestDto.getFirstName())
-//                        .build();
-//        userRepository.save(user);
-        UserEntity user = modelMapper.map(userRequestDto, UserEntity.class);
+    public void saveUser(UserEntity user) {
         userRepository.save(user);
-        responseApi.setCode(HttpStatus.ACCEPTED.value());
-        responseApi.setMessage(USER_SAVED);
-        return responseApi;
+
     }
+
+    @Override
+    public Optional<UserEntity> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+//    @Override
+//    public ResponseApi saveUser(UserRequestDto userRequestDto) {
+//        ResponseApi responseApi= new ResponseApi<>();
+////        var user=UserEntity.builder()
+////                .email(userRequestDto.getEmail())
+////                .firstName(userRequestDto.getFirstName())
+////                        .build();
+////        userRepository.save(user);
+//        UserEntity user = modelMapper.map(userRequestDto, UserEntity.class);
+//        userRepository.save(user);
+//        responseApi.setCode(HttpStatus.ACCEPTED.value());
+//        responseApi.setMessage(USER_SAVED);
+//        return responseApi;
+//    }
 }

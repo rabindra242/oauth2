@@ -1,8 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Icon } from "semantic-ui-react";
 import Button from "react-bootstrap/Button";
-import {useNavigate} from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 type Inputs = {
     email: string;
@@ -13,59 +12,85 @@ export default function LoginForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
     const navigate = useNavigate();
 
-    const onSubmit = (data: Inputs) => {
-        // Handle form submission
-        console.log(data);
-    };
-
-
-    // const handleGoogleLogin = async () => {
-    //     try {
-    //
-    //         const response = await fetch('http://localhost:8080/oauth2/authorization/google',{
-    //             mode:"no-cors"
-    //         });
-    //         console.log(response)
-    //         // window.location.href= response
-    //
-    //         // Check if the response was successful
-    //     //     if (!response.ok) {
-    //     //         throw new Error('Network response was not ok');
-    //     //     }
-    //     //
-    //     //     // Extract the JSON response body
-    //     //     const responseData = await response.json();
-    //     //
-    //     //     // Assuming responseData contains the redirect URL from the backend
-    //     //     if (responseData.redirectUrl) {
-    //     //         // Redirect to the URL received from the backend
-    //     //         window.location.href = responseData.redirectUrl;
-    //     //     } else {
-    //     //         console.error("Redirect URL not found in response");
-    //     //     }
-    //     } catch (error) {
-    //         console.error("Error initiating Google Login:", error);
-    //      }
-    // }
-    const handleGithubLogin = async () => {
+    const onSubmit = async (data: Inputs) => {
+        console.log("Hit")
         try {
-            // Handle the response and redirect to the expected URL
-            const redirectUrl = 'http://localhost:8080/oauth2/authorization/github';
-            window.location.replace(redirectUrl);
+            const response = await fetch('http://localhost:8080/auth/login', {
+                method: 'POST',
+                mode: 'no-cors',
+                credentials:'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+
+                },
+                body: JSON.stringify(data),
+            }).then(response => response.json());
+            console.log("Hit")
+            console.log(data)
+            console.log(response)
+
+            if (response.ok) {
+                // Redirect to dashboard or any other route upon successful login
+                history.push('/home');
+            } else {
+                // Handle error response from the server
+                const responseData = await response.json();
+                setError(responseData.message); // Assuming your server returns an error message
+            }
         } catch (error) {
-            console.error('Error initiating Google Login:', error);
+            console.error('ErrorR:', error);
         }
-    };
+    }
+
+
 
     const handleGoogleLogin = async () => {
         try {
             // Handle the response and redirect to the expected URL
             const redirectUrl = 'http://localhost:8080/oauth2/authorization/google';
-            window.location.replace(redirectUrl);
+            window.location.href = redirectUrl;
         } catch (error) {
             console.error('Error initiating Google Login:', error);
         }
     };
+
+    const handleGithubLogin = async () => {
+        try {
+            // Handle the response and redirect to the expected URL
+            const redirectUrl = 'http://localhost:8080/oauth2/authorization/github';
+            window.location.href = redirectUrl; // Redirect using href instead of replace
+        } catch (error) {
+            console.error('Error initiating Github Login:', error);
+        }
+    };
+
+
+
+    // const handleGoogleLogin = async () => {
+    //     try {
+    //         // Make a request to the backend server to initiate the Google OAuth2 flow
+    //         const response = await axios.get('http://localhost:8080/oauth2/authorization/google',{
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //
+    //             }
+    //         });
+    //         window.location.href = response.data.redirectUrl;
+    //     } catch (error) {
+    //         console.error('Error initiating Google login:', error);
+    //     }
+    // };
+    //
+    // const handleGithubLogin = async () => {
+    //     try {
+    //         // Make a request to the backend server to initiate the Github OAuth2 flow
+    //         const response = await axios.get('http://localhost:8080/oauth2/authorization/github');
+    //         window.location.href = response.data.redirectUrl;
+    //     } catch (error) {
+    //         console.error('Error initiating Github login:', error);
+    //     }
+    // };
 
 
     return (
@@ -154,4 +179,3 @@ export default function LoginForm() {
         </div>
     );
 }
-
