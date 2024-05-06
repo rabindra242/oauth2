@@ -2,46 +2,60 @@ import { useForm } from "react-hook-form";
 import { Icon } from "semantic-ui-react";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import {axiosInstance} from "./axiosInstance.ts";
 
 type Inputs = {
     email: string;
-    password: string;
+    passwords: string;
 };
 
 export default function LoginForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
     const navigate = useNavigate();
 
+    // const onSubmit = async (data: Inputs) => {
+    //     console.log("Hit")
+    //     try {
+    //         const response = await fetch('http://localhost:8080/auth/login', {
+    //             method: 'POST',
+    //             mode: 'no-cors',
+    //             credentials:'include',
+    //             headers: {
+    //                 'Accept': 'application/json',
+    //                 'Content-Type': 'application/json'
+    //
+    //             },
+    //             body: JSON.stringify(data),
+    //         }).then(response => response.json());
+    //         console.log("Hit")
+    //         console.log(data)
+    //         console.log(response)
+    //
+    //         if (response.ok) {
+    //             // Redirect to dashboard or any other route upon successful login
+    //             history.push('/home');
+    //         } else {
+    //             // Handle error response from the server
+    //             const responseData = await response.json();
+    //             setError(responseData.message); // Assuming your server returns an error message
+    //         }
+    //     } catch (error) {
+    //         console.error('ErrorR:', error);
+    //     }
+    // }
+
     const onSubmit = async (data: Inputs) => {
         console.log("Hit")
         try {
-            const response = await fetch('http://localhost:8080/auth/login', {
-                method: 'POST',
-                mode: 'no-cors',
-                credentials:'include',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-
-                },
-                body: JSON.stringify(data),
-            }).then(response => response.json());
-            console.log("Hit")
-            console.log(data)
-            console.log(response)
-
-            if (response.ok) {
-                // Redirect to dashboard or any other route upon successful login
-                history.push('/home');
-            } else {
-                // Handle error response from the server
-                const responseData = await response.json();
-                setError(responseData.message); // Assuming your server returns an error message
-            }
-        } catch (error) {
-            console.error('ErrorR:', error);
+            const response = await axiosInstance.post("/auth/login", data)
+            console.log(response?.data)
+        }catch (e){
+            console.log(e)
         }
     }
+
+
 
 
 
@@ -134,11 +148,11 @@ export default function LoginForm() {
                                 </div>
                                 <div data-mdb-input-init className="form-outline mb-3">
                                     <input
-                                        type="password"
-                                        id="password"
+                                        type="text"
+                                        id="passwords"
                                         className="form-control form-control-lg"
                                         placeholder="Enter password"
-                                        {...register("password", {
+                                        {...register("passwords", {
                                             required: "Password is required",
                                             minLength: {
                                                 value: 6,
@@ -146,7 +160,7 @@ export default function LoginForm() {
                                             },
                                         })}
                                     />
-                                    {errors.password && <span className="error">{errors.password.message}</span>}
+                                    {errors.passwords && <span className="error">{errors.passwords.message}</span>}
                                 </div>
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="form-check mb-0">

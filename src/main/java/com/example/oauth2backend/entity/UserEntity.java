@@ -40,8 +40,10 @@ public class UserEntity extends Auditable implements UserDetails {
     @Enumerated(EnumType.STRING)
     private RegistrationSource registrationSource;
 
-    private String picture;
+    private String phoneNumber;
     private String passwords;
+    private String picture;
+    private String token;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -33,4 +33,8 @@ public class UserController {
     public ResponseEntity<ResponseApi> login(@RequestBody UserRequestDto userRequestDto){
         return ResponseEntity.ok(userManageMentService.loginUser(userRequestDto));
     }
+    @GetMapping("auth/login")
+    public String login(){
+        return "hasdbads";
+    }
 }

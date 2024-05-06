@@ -12,5 +12,6 @@ import lombok.Setter;
 public class ResponseApi<T> {
     private String message;
     private int code;
+    private String token;
     private T Response;
 }

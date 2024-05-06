@@ -11,11 +11,13 @@ import lombok.*;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRequestDto {
+    @JsonIgnore
     private String id;
+    @JsonIgnore
     private String firstName;
     private String email;
-    @JsonIgnore
-    private String picture;
+    private String phoneNumber;
     private String passwords;
+    private String picture;
 
 }

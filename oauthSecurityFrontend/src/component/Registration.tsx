@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 type Inputs = {
     name: string;
     email: string;
-    password: string;
+    passwords: string;
     phoneNumber: string;
 };
 

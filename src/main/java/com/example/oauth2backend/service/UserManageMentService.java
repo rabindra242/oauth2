@@ -39,6 +39,7 @@ public class UserManageMentService {
             user.setEmail(reqRes.getEmail());
             user.setRole(Role.ROLE_USER);
             user.setRegistrationSource(RegistrationSource.LOGIN);
+            user.setPhoneNumber(reqRes.getPhoneNumber());
             userRepo.save(user);
             sendEmail(reqRes.getEmail());
             responseApi.setResponse(user);

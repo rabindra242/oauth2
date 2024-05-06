@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -27,12 +29,20 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken auth2Authentication = (OAuth2AuthenticationToken) authentication;
+        System.out.println(auth2Authentication);
         if ("google".equals(auth2Authentication.getAuthorizedClientRegistrationId())) {
             DefaultOAuth2User principal = (DefaultOAuth2User) auth2Authentication.getPrincipal();
+//            OidcIdToken defaultOidcUser=OidcIdToken.withTokenValue("idToken").tokenValue("tokenValue");
+////            OidcIdToken token= OidcIdToken.withTokenValue("tokenValue").build();
+//            System.out.println("Raj"+defaultOidcUser);
+            System.out.println(principal);
             Map<String, Object> attributes = principal.getAttributes();
             String email = attributes.getOrDefault("email", "").toString();
             String name = attributes.getOrDefault("name", "").toString();
             String picture = attributes.getOrDefault("picture", "").toString();
+
+
+
             userService.findByEmail(email).ifPresentOrElse(user -> {
                 if (user.getRole() != null) {
                     DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(user.getRole().name())),
@@ -41,14 +51,15 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
                             auth2Authentication.getAuthorizedClientRegistrationId());
                     SecurityContextHolder.getContext().setAuthentication(securtityAuth);
                 } else {
-                    // Handle the case where the user's role is null
                 }
             },()->{
                 UserEntity userEntity= new UserEntity();
                 userEntity.setEmail(email);
                 userEntity.setRole(Role.ROLE_USER);
                 userEntity.setRegistrationSource(RegistrationSource.GOOGLE);
+//                userEntity.setPhoneNumber(phoneNumber);
                 userEntity.setPicture(picture);
+//                userEntity.setToken(token);
                 userEntity.setFirstName(name);
                 userService.saveUser(userEntity);
                 DefaultOAuth2User newUser=new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
