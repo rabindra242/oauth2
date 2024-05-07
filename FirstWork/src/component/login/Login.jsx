@@ -1,137 +1,105 @@
-import {useState} from "react";
-import {Field, Form, Formik} from "formik";
-import {Button, Label} from "reactstrap";
-
-import {Link, useNavigate} from "react-router-dom";
-import {Col, Row} from "react-bootstrap";
+import { useState } from "react";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
+import { Container, Row, Col, Button, FormGroup, Label, Input, Alert } from "reactstrap";
 import axiosInstance from "../../axiosInstance.js";
 
 
 const LoginUser = () => {
   const navigate = useNavigate();
-  const [userForm, setUserForm] = useState({
-    email: "",
-    passwords: "",
+  const [error, setError] = useState(null);
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+    password: Yup.string()
+        .min(6, "Password must be at least 6 characters long")
+        .required("Password is required"),
   });
 
-  function validateEmail(value) {
-    let error;
-    if (!value) {
-      error = "Email is Required";
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-      error = "Invalid email address";
-    }
-    return error;
-  }
+  const formikSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await axiosInstance.post("/auth/login", values,{
+        withCredentials:true,
+      });
+      console.log("Response:", response);
 
-
-  function validatePassword(value) {
-    let error;
-    if (!value) {
-      error = "Password is Required";
-    } else if (value.length < 6) {
-      error = "Password must be at least 6 characters long";
+      if (response.status === 200) {
+        // Handle successful login
+        console.log("Login successful:", response.data);
+        // Add your logic to handle the successful login here
+      } else {
+        setError(response.data.message || "An error occurred. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
-    return error;
-  }
+  };
+
 
   const buttonHandler = async () => {
     try {
-      // const response = await axiosInstance.get("/auth/google");
-      // console.log(response);
-      // const URL = "http://localhost:8080/oauth2/authorization/google";
-      const URL = "http://localhost:8080/oauth2/authorization/google"
-      window.location.replace(URL)
-
+      const URL = "http://localhost:8080/oauth2/authorization/google";
+      window.location.replace(URL);
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
-
-  const formikSubmit = async (value, action) => {
-    try {
-      const { status, data } = await axiosInstance.post(
-        "/auth/login",
-        value
-      );
-      console.log(status)
-      console.log(data)
-    //   const token = data?.token;
-
-    //   Cookies.set("auth", "Bearer " + token);
-    //   if (status === 200 && Cookies.get("auth")) {
-    //     const response = await axiosInstance.get(`/userprofile`);
-    //     localStorage.setItem("userprofile", JSON.stringify(response?.data));
-    //     setUser(response?.data);
-    //     const resData = await getWallet();
-    //     console.log(resData?.data?.response);
-    //     if (resData?.data?.success === true) {
-    //       localStorage.setItem(
-    //         "wallet",
-    //         JSON.stringify(resData?.data?.response)
-    //       );
-    //       navigate("/user/wallet");
-    //     }touched
-    //     // }
-    //   }
-    } catch (error) {
-      console.log(error)
-      // navigate("/user/register-wallet");
-    }
-  };
   return (
-    <div className="name" style={{ paddingBottom: "200px" }}>
-      <div>
-        <h1>Login User!!!</h1>
-        <br></br>
-        <Formik initialValues={userForm} onSubmit={formikSubmit}>
-          {({ errors, touched }) => (
-            <Form>
-              <div className="form-group">
-                <Label>Email</Label>
-                <Field
-                  className="form-control"
-                  name="email"
-                  type="email"
-                  validate={validateEmail}
-                />
-                {errors.email && touched.email && (
-                  <div style={{ color: "red" }}>{errors.email}</div>
-                )}
-              </div>
-
-              <div>
-                <Label>Password</Label>
-                <Field
-                  className="form-control"
-                  name="passwords"
-                  type="text"
-                  validate={validatePassword}
-                />
-                {errors.passwords && touched.passwords && (
-                  <div style={{ color: "red" }}>{errors.passwords}</div>
-                )}
-              </div>
-              <br></br>
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
-            </Form>
-          )}
-        </Formik>
-        <Row className="py-3">
-          <Col>
-            New Customer? <Link to={"/register"}>Register</Link>
+      <Container className="my-5">
+        <Row className="justify-content-center">
+          <Col md={6}>
+            <h1 className="text-center mb-4">Login</h1>
+            <Formik
+                initialValues={{ email: "", password: "" }}
+                validationSchema={validationSchema}
+                onSubmit={formikSubmit}
+            >
+              {({ isSubmitting }) => (
+                  <Form>
+                    {error && <Alert color="danger">{error}</Alert>}
+                    <FormGroup>
+                      <Label for="email">Email</Label>
+                      <Field
+                          type="email"
+                          name="email"
+                          id="email"
+                          className="form-control"
+                          placeholder="Enter your email"
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <Label for="password">Password</Label>
+                      <Field
+                          type="text"
+                          name="password"
+                          id="password"
+                          className="form-control"
+                          placeholder="Enter your password"
+                      />
+                    </FormGroup>
+                    <Button type="submit" color="primary" block disabled={isSubmitting}>
+                      {isSubmitting ? "Loading..." : "Login"}
+                    </Button>
+                  </Form>
+              )}
+            </Formik>
+            <Row className="mt-3">
+              <Col>
+                New Customer? <Link to="/register">Register</Link>
+              </Col>
+              <Col className="text-right">
+                Sign in using Google? <Button color="secondary" onClick={buttonHandler}>Click here</Button>
+              </Col>
+            </Row>
           </Col>
         </Row>
-        <Row className="py-3">
-          <Col>
-            Sign in using google ? <Button onClick={buttonHandler} >Click here</ Button>
-          </Col>
-        </Row>
-      </div>
-    </div>
+      </Container>
   );
 };
 

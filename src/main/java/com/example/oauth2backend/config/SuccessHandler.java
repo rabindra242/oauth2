@@ -4,6 +4,7 @@ import com.example.oauth2backend.entity.UserEntity;
 import com.example.oauth2backend.service.UserService;
 import com.example.oauth2backend.utill.enumeration.RegistrationSource;
 import com.example.oauth2backend.utill.enumeration.Role;
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,15 +27,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private final UserService userService;
+
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken auth2Authentication = (OAuth2AuthenticationToken) authentication;
         System.out.println(auth2Authentication);
         if ("google".equals(auth2Authentication.getAuthorizedClientRegistrationId())) {
             DefaultOAuth2User principal = (DefaultOAuth2User) auth2Authentication.getPrincipal();
-//            OidcIdToken defaultOidcUser=OidcIdToken.withTokenValue("idToken").tokenValue("tokenValue");
-////            OidcIdToken token= OidcIdToken.withTokenValue("tokenValue").build();
-//            System.out.println("Raj"+defaultOidcUser);
             System.out.println(principal);
             Map<String, Object> attributes = principal.getAttributes();
             String email = attributes.getOrDefault("email", "").toString();

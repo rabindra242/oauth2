@@ -1,5 +1,6 @@
 package com.example.oauth2backend.controller;
 
+import com.example.oauth2backend.dto.LoginRequestDTO;
 import com.example.oauth2backend.dto.UserRequestDto;
 import com.example.oauth2backend.entity.UserEntity;
 import com.example.oauth2backend.service.UserManageMentService;
@@ -30,10 +31,10 @@ public class UserController {
         return ResponseEntity.ok(userManageMentService.registerUser(userRequestDto));
     }
     @PostMapping("auth/login")
-    public ResponseEntity<ResponseApi> login(@RequestBody UserRequestDto userRequestDto){
-        return ResponseEntity.ok(userManageMentService.loginUser(userRequestDto));
+    public ResponseEntity<ResponseApi> login(@RequestBody LoginRequestDTO loginRequestDTO){
+        return ResponseEntity.ok(userManageMentService.loginUser(loginRequestDTO));
     }
-    @GetMapping("auth/login")
+    @GetMapping("/oauth2/authorization/google")
     public String login(){
         return "hasdbads";
     }

@@ -11,11 +11,19 @@ spring:
           google:
             client-id: 837951214916-bgv8eulnacb6g1lujpdco67l316itpf1.apps.googleusercontent.com
             client-secret: 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
-            scope:
-              - openid
-              - profile
-              - email
             client-name: google
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: rabindra242adk@gmail.com
+    password:   pqhy puth eewd kwqg
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   datasource:
     url: jdbc:mysql://localhost:3306/userdb
     username: root
@@ -24,6 +32,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
 
 
 

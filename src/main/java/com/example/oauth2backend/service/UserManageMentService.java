@@ -1,9 +1,11 @@
 package com.example.oauth2backend.service;
 
+import com.example.oauth2backend.dto.LoginRequestDTO;
 import com.example.oauth2backend.dto.UserRequestDto;
 import com.example.oauth2backend.entity.UserEntity;
 import com.example.oauth2backend.repo.UserRepository;
 import com.example.oauth2backend.utill.JwtUtil;
+import com.example.oauth2backend.utill.email.EmailConfig;
 import com.example.oauth2backend.utill.enumeration.RegistrationSource;
 import com.example.oauth2backend.utill.enumeration.Role;
 import com.example.oauth2backend.utill.responseapi.ResponseApi;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class UserManageMentService {
     private final JwtUtil jwtUtill;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final EmailConfig emailConfig;
 
     public ResponseApi registerUser(UserRequestDto reqRes) {
         ResponseApi responseApi = new ResponseApi();
@@ -41,26 +46,44 @@ public class UserManageMentService {
             user.setRegistrationSource(RegistrationSource.LOGIN);
             user.setPhoneNumber(reqRes.getPhoneNumber());
             userRepo.save(user);
-            sendEmail(reqRes.getEmail());
+            emailConfig.sendSimpleMail(reqRes.getEmail());
             responseApi.setResponse(user);
             return responseApi;
         }
     }
 
-    private void sendEmail(String email) {
-
-    }
-
-
-    public ResponseApi loginUser(UserRequestDto reqRes) {
+    public ResponseApi loginUser(LoginRequestDTO reqRes) {
         ResponseApi responseApi = new ResponseApi();
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(reqRes.getEmail(), reqRes.getPasswords()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(reqRes.getEmail(), reqRes.getPassword()));
+
         UserEntity userEntity=userRepo.findByEmail(reqRes.getEmail()).orElse(null);
+        if (reqRes.getEmail().isBlank()||reqRes.getEmail().isEmpty()){
+            return null;
+        }
+        emailConfig.sendSimpleMail(reqRes.getEmail());
         var jwt=jwtUtill.generateToken(userEntity);
         responseApi.setResponse(jwt);
         log.info(jwt);
         return responseApi;
     }
+
+    public ResponseApi forgetPassword(String email, String password) {
+        ResponseApi responseApi = new ResponseApi();
+        Optional<UserEntity> user=userRepo.findByEmail(email);
+        if (user.get().getPasswords().equals(password)){
+             responseApi.setResponse( "Password are same please Use another Password");
+        }
+        if (user.get().getEmail().equals(email)){
+            UserEntity userEntity=new UserEntity();
+            userEntity.setPasswords(passwordEncoder.encode(password));
+            update(userEntity);
+        }
+
+        responseApi.setResponse("Successfuly Changed");
+        return responseApi;
+    }
+
+    private void update(UserEntity userEntity){}
 
 
 }

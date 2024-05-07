@@ -16,8 +16,10 @@ public class UserRequestDto {
     @JsonIgnore
     private String firstName;
     private String email;
+    @JsonIgnore
     private String phoneNumber;
     private String passwords;
+    @JsonIgnore
     private String picture;
 
 }
