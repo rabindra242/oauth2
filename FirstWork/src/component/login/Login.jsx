@@ -46,6 +46,7 @@ const LoginUser = () => {
     try {
       const URL = "http://localhost:8080/oauth2/authorization/google";
       window.location.replace(URL);
+      console.log("asdfsadf")
     } catch (error) {
       console.error("Error:", error);
     }

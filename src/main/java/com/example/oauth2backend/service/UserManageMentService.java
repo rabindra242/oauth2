@@ -67,23 +67,35 @@ public class UserManageMentService {
         return responseApi;
     }
 
-    public ResponseApi forgetPassword(String email, String password) {
+//    public ResponseApi forgetPassword(String email, String password) {
+//        ResponseApi responseApi = new ResponseApi();
+//        Optional<UserEntity> user=userRepo.findByEmail(email);
+//        if (user.get().getPasswords().equals(password)){
+//             responseApi.setResponse( "Password are same please Use another Password");
+//        }
+//        if (user.get().getEmail().equals(email)){
+//            UserEntity userEntity=new UserEntity();
+//            userEntity.setPasswords(passwordEncoder.encode(password));
+//            update(userEntity);
+//        }
+//
+//        responseApi.setResponse("Successfuly Changed");
+//        return responseApi;
+//    }
+//
+//    private void update(UserEntity userEntity){}
+//
+//
+
+
+    public ResponseApi findUserDetailsFromOauth2Email(String email){
         ResponseApi responseApi = new ResponseApi();
-        Optional<UserEntity> user=userRepo.findByEmail(email);
-        if (user.get().getPasswords().equals(password)){
-             responseApi.setResponse( "Password are same please Use another Password");
-        }
-        if (user.get().getEmail().equals(email)){
-            UserEntity userEntity=new UserEntity();
-            userEntity.setPasswords(passwordEncoder.encode(password));
-            update(userEntity);
-        }
-
-        responseApi.setResponse("Successfuly Changed");
+        UserEntity user=userRepo.findByEmail(email).get();
+        responseApi.setResponse(user);
         return responseApi;
+
     }
-
-    private void update(UserEntity userEntity){}
-
-
 }
+
+
+

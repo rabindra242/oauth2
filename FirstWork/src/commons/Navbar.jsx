@@ -4,9 +4,6 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
 function NavScrollExample() {
-
-
-
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
             <Container fluid>
@@ -19,6 +16,7 @@ function NavScrollExample() {
                         navbarScroll
                     >
                         <Nav.Link href="#action1">Home</Nav.Link>
+                        <Nav.Link href="/form">Form</Nav.Link>
                         {/* Add more Nav.Link components as needed */}
                     </Nav>
 

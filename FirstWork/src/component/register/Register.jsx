@@ -40,9 +40,6 @@ const Registration = () => {
             setSubmitting(false);
         }
     };
-
-
-
     return (
         <Container className="my-5">
             <Row className="justify-content-center">
