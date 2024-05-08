@@ -1,9 +1,29 @@
 
+import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import axiosInstance from "../axiosInstance.js";
 
 function NavScrollExample() {
+    const [userEmail, setUserEmail] = useState("");
+
+    // Fetch user credentials when component mounts
+    useEffect(() => {
+        getUserCredentials();
+    }, []);
+
+    // Function to fetch user credentials
+    const getUserCredentials = async () => {
+        try {
+            const response = await axiosInstance.get("/userCredentials");
+            // const data = await response.json();
+            setUserEmail(response.data.message);
+        } catch (error) {
+            console.error("Error fetching user credentials:", error);
+        }
+    };
+
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
             <Container fluid>
@@ -15,12 +35,14 @@ function NavScrollExample() {
                         style={{ maxHeight: '100px' }}
                         navbarScroll
                     >
-                        <Nav.Link href="#action1">Home</Nav.Link>
+                        <Nav.Link href="/home">Home</Nav.Link>
                         <Nav.Link href="/form">Form</Nav.Link>
+                        <Nav.Link href="/form-data"> Form Details</Nav.Link>
+
                         {/* Add more Nav.Link components as needed */}
                     </Nav>
-
-
+                    {/* Display user credentials */}
+                    {userEmail && <Nav.Link>{userEmail}</Nav.Link>}
                 </Navbar.Collapse>
             </Container>
         </Navbar>

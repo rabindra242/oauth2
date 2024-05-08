@@ -26,8 +26,5 @@ public class FormDataEntity extends Auditable {
     private LocalDate dateOfBirth;
     private String jobType;
     private String gender;
-//    @OneToOne
-//    private UserEntity userEntity;
-
-
+    private String email;
 }

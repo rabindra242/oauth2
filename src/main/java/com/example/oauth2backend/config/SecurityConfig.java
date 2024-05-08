@@ -28,7 +28,7 @@ import java.util.List;
 public class SecurityConfig {
     private final SuccessHandler auth2LoginSuccessHandler;
     private final OurUserDetailService userDetailsService;
-    private final JWTFilter filter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.
@@ -36,15 +36,12 @@ public class SecurityConfig {
                 .cors(c->c.configurationSource(corsFilter()))
                 .authorizeHttpRequests(
                         requests -> requests
-                                .requestMatchers("/auth/register","auth/login","/auth/form/post").permitAll()
+                                .requestMatchers("/auth/register","auth/login").permitAll()
                                 .anyRequest().authenticated()
                 ).oauth2Login(
                         oauth -> {
                     oauth.successHandler(auth2LoginSuccessHandler);
                 })
-                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
     @Bean
@@ -59,24 +56,24 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
-        return config.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    public AuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//        provider.setUserDetailsService(userDetailsService);
+//        provider.setPasswordEncoder(passwordEncoder());
+//        return provider;
+//    }
+//
+//    @Bean
+//    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+//            throws Exception {
+//        return config.getAuthenticationManager();
+//    }
+//
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 
 
 

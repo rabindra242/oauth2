@@ -13,6 +13,7 @@ spring:
             client-secret: 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
             client-name: google
 
+
   mail:
     host: smtp.gmail.com
     port: 587

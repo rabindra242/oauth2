@@ -25,15 +25,28 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private final UserService userService;
-    private final HttpSession httpSession;
-    private final SecurityContextHolder securityContextHolder;
+//    private final HttpSession httpSession;
+//    private final SecurityContextHolder securityContextHolder;
+//
+//    public Authentication getAuthentication(OAuth2AuthenticationToken auth2Authentication, UserEntity userEntity, Map<String, Object> attributes) {
+//        DefaultOAuth2User newUser = new DefaultOAuth2User(
+//                List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
+//                attributes,
+//                "name"
+//        );
+//        return new OAuth2AuthenticationToken(
+//                newUser,
+//                List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
+//                auth2Authentication.getAuthorizedClientRegistrationId()
+//        );
+//    }
 
 
-    @Override
+        @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken auth2Authentication = (OAuth2AuthenticationToken) authentication;
         System.out.println(auth2Authentication);
-        if ("google".equals(auth2Authentication.getAuthorizedClientRegistrationId())) {
+//        if ("google".equals(auth2Authentication.getAuthorizedClientRegistrationId())) {
             DefaultOAuth2User principal = (DefaultOAuth2User) auth2Authentication.getPrincipal();
             System.out.println(principal);
             Map<String, Object> attributes = principal.getAttributes();
@@ -48,7 +61,7 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
                     Authentication securtityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(user.getRole().name())),
                             auth2Authentication.getAuthorizedClientRegistrationId());
 //                    SecurityContextHolder.getContext().setAuthentication(securtityAuth);
-                    securityContextHolder.getContext().setAuthentication(securtityAuth);
+                    SecurityContextHolder.getContext().setAuthentication(securtityAuth);
                 } else {
                 }
             },()->{
@@ -66,10 +79,13 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
                 SecurityContextHolder.getContext().setAuthentication(securtityAuth);
 
             });
-        }
+            var user=userService.findByEmail(email).get();
+            HttpSession httpSession=request.getSession();
+            httpSession.setAttribute("email",email);
         this.setAlwaysUseDefaultTargetUrl(true);
         this.setDefaultTargetUrl("http://localhost:5173/home");
         super.onAuthenticationSuccess(request, response, authentication);
     }
-
 }
+
+
