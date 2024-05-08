@@ -3,6 +3,7 @@ package com.example.oauth2backend.entity;
 import com.example.oauth2backend.entity.util.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,8 @@ public class FormDataEntity extends Auditable {
     private LocalDate dateOfBirth;
     private String jobType;
     private String gender;
+//    @OneToOne
+//    private UserEntity userEntity;
 
 
 }

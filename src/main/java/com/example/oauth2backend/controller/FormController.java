@@ -1,7 +1,7 @@
 package com.example.oauth2backend.controller;
 
 import com.example.oauth2backend.dto.FormRequestDto;
-import com.example.oauth2backend.service.FormService;
+import com.example.oauth2backend.service.FormServiceImpl;
 import com.example.oauth2backend.utill.responseapi.ResponseApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class FormController {
-    private final FormService formService;
+    private final FormServiceImpl formService;
+
 
     @PostMapping("/auth/form/post")
-    public ResponseEntity<ResponseApi> saveUserFormDetails(@RequestBody FormRequestDto formRequestDto){
-        var user=formService.saveUser(formRequestDto);
-        return ResponseEntity.ok(user);
-
+    public ResponseEntity<ResponseApi> saveUser(@RequestBody FormRequestDto requestDto){
+        formService.saveUser(requestDto);
+        return ResponseEntity.ok(formService.saveUser(requestDto));
     }
 }

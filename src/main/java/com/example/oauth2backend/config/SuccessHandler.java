@@ -1,22 +1,18 @@
 package com.example.oauth2backend.config;
 
 import com.example.oauth2backend.entity.UserEntity;
-import com.example.oauth2backend.service.UserManageMentService;
 import com.example.oauth2backend.service.UserService;
 import com.example.oauth2backend.utill.enumeration.RegistrationSource;
 import com.example.oauth2backend.utill.enumeration.Role;
-import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -29,6 +25,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private final UserService userService;
+    private final HttpSession httpSession;
+    private final SecurityContextHolder securityContextHolder;
+
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken auth2Authentication = (OAuth2AuthenticationToken) authentication;
@@ -47,7 +47,8 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
                             attributes, "name");
                     Authentication securtityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(user.getRole().name())),
                             auth2Authentication.getAuthorizedClientRegistrationId());
-                    SecurityContextHolder.getContext().setAuthentication(securtityAuth);
+//                    SecurityContextHolder.getContext().setAuthentication(securtityAuth);
+                    securityContextHolder.getContext().setAuthentication(securtityAuth);
                 } else {
                 }
             },()->{
@@ -65,11 +66,7 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
                 SecurityContextHolder.getContext().setAuthentication(securtityAuth);
 
             });
-            Cookie cookie = new Cookie("email",email);
-            cookie.setHttpOnly(false);
-            response.addCookie(cookie);
         }
-
         this.setAlwaysUseDefaultTargetUrl(true);
         this.setDefaultTargetUrl("http://localhost:5173/home");
         super.onAuthenticationSuccess(request, response, authentication);
