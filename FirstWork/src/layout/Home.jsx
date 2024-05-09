@@ -1,7 +1,31 @@
-
+import React from 'react';
+import axios from 'axios';
 import { Container, Row, Col, Card, CardBody, CardTitle, CardText, Button } from 'reactstrap';
 
 function Home() {
+    const downloadExcel = () => {
+        axios({
+            url: '/downloadExcelFile',
+            method: 'GET',
+            responseType: 'blob', // Set the response type to blob
+            headers: {
+                'Content-Type': 'application/vnd.ms-excel'
+            }
+        })
+            .then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'contents.xls'); // Set the file name
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link); // Cleanup
+            })
+            .catch(error => {
+                console.error('Error downloading Excel file:', error);
+            });
+    };
+
     return (
         <Container className="my-5">
             <Row>
@@ -9,51 +33,9 @@ function Home() {
                     <Card>
                         <img src="https://via.placeholder.com/500x300" alt="Product" className="card-img-top" />
                         <CardBody>
-                            <CardTitle tag="h5">Product 1</CardTitle>
-                            <CardText>This is a description of the product.</CardText>
-                            <Button color="primary">Add to Cart</Button>
-                        </CardBody>
-                    </Card>
-                </Col>
-                <Col md={6}>
-                    <Card>
-                        <img src="https://via.placeholder.com/500x300" alt="Product" className="card-img-top" />
-                        <CardBody>
-                            <CardTitle tag="h5">Product 2</CardTitle>
-                            <CardText>This is a description of the product.</CardText>
-                            <Button color="primary">Add to Cart</Button>
-                        </CardBody>
-                    </Card>
-                </Col>
-            </Row>
-            <Row className="mt-5">
-                <Col md={4}>
-                    <Card>
-                        <img src="https://via.placeholder.com/300x200" alt="Product" className="card-img-top" />
-                        <CardBody>
-                            <CardTitle tag="h5">Product 3</CardTitle>
-                            <CardText>This is a description of the product.</CardText>
-                            <Button color="primary">Add to Cart</Button>
-                        </CardBody>
-                    </Card>
-                </Col>
-                <Col md={4}>
-                    <Card>
-                        <img src="https://via.placeholder.com/300x200" alt="Product" className="card-img-top" />
-                        <CardBody>
-                            <CardTitle tag="h5">Product 4</CardTitle>
-                            <CardText>This is a description of the product.</CardText>
-                            <Button color="primary">Add to Cart</Button>
-                        </CardBody>
-                    </Card>
-                </Col>
-                <Col md={4}>
-                    <Card>
-                        <img src="https://via.placeholder.com/300x200" alt="Product" className="card-img-top" />
-                        <CardBody>
-                            <CardTitle tag="h5">Product 5</CardTitle>
-                            <CardText>This is a description of the product.</CardText>
-                            <Button color="primary">Add to Cart</Button>
+                            <CardTitle tag="h5">Form Data</CardTitle>
+                            <CardText>This is the form data in csv format it is the data save by the  user</CardText>
+                            <Button color="primary" onClick={downloadExcel}>Download The Excel</Button>
                         </CardBody>
                     </Card>
                 </Col>
