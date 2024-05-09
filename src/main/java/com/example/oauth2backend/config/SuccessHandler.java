@@ -25,23 +25,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private final UserService userService;
-//    private final HttpSession httpSession;
-//    private final SecurityContextHolder securityContextHolder;
-//
-//    public Authentication getAuthentication(OAuth2AuthenticationToken auth2Authentication, UserEntity userEntity, Map<String, Object> attributes) {
-//        DefaultOAuth2User newUser = new DefaultOAuth2User(
-//                List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
-//                attributes,
-//                "name"
-//        );
-//        return new OAuth2AuthenticationToken(
-//                newUser,
-//                List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
-//                auth2Authentication.getAuthorizedClientRegistrationId()
-//        );
-//    }
-
-
         @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken auth2Authentication = (OAuth2AuthenticationToken) authentication;
@@ -60,7 +43,6 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
                             attributes, "name");
                     Authentication securtityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(user.getRole().name())),
                             auth2Authentication.getAuthorizedClientRegistrationId());
-//                    SecurityContextHolder.getContext().setAuthentication(securtityAuth);
                     SecurityContextHolder.getContext().setAuthentication(securtityAuth);
                 } else {
                 }

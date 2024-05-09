@@ -38,7 +38,8 @@ public class FormController {
         ResponseApi responseApi= new ResponseApi();
         HttpSession httpSession=request.getSession();
         String email=httpSession.getAttribute("email").toString();
-        responseApi.setMessage(email);
+        responseApi.setResponse(email);
+
         return ResponseEntity.ok(responseApi);
     }
     @GetMapping("/get-formData")

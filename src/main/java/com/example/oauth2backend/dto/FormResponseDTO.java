@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FormResponseDTO {
+    private String id;
     private String phoneNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;

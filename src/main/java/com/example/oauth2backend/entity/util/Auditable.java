@@ -16,12 +16,10 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable {
-
     @Id
     @SequenceGenerator(name = "primary_key_seq", sequenceName = "primary_key_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "primary_key_seq")
     private Long id;
-
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
@@ -29,7 +27,6 @@ public abstract class Auditable {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-
     @PrePersist
     public void insertDataBeforePersisting() {
         LocalDateTime now = LocalDateTime.now();
