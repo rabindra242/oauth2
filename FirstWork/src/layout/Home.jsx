@@ -1,6 +1,6 @@
-import React from 'react';
+
 import axios from 'axios';
-import { Container, Row, Col, Card, CardBody, CardTitle, CardText, Button } from 'reactstrap';
+import {Container, Row, Col, Card, CardBody, CardTitle, CardText, Button} from 'reactstrap';
 
 function Home() {
     const downloadExcel = () => {
@@ -31,11 +31,21 @@ function Home() {
             <Row>
                 <Col md={6}>
                     <Card>
-                        <img src="https://via.placeholder.com/500x300" alt="Product" className="card-img-top" />
+                        <img src="https://via.placeholder.com/500x300" alt="Product" className="card-img-top"/>
                         <CardBody>
                             <CardTitle tag="h5">Form Data</CardTitle>
-                            <CardText>This is the form data in csv format it is the data save by the  user</CardText>
+                            <CardText>This is the form data in csv format it is the data save by the user</CardText>
                             <Button color="primary" onClick={downloadExcel}>Download The Excel</Button>
+                        </CardBody>
+                    </Card>
+                </Col>
+                <Col md={6}>
+                    <Card>
+                        <img src="https://via.placeholder.com/500x300" alt="Product" className="card-img-top"/>
+                        <CardBody>
+                            <CardTitle tag="h5">Users Data</CardTitle>
+                            <CardText>This is the users data in csv format it is the data save by the user</CardText>
+                            <Button color="primary" >Download The Excel</Button>
                         </CardBody>
                     </Card>
                 </Col>

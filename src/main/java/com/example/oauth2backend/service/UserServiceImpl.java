@@ -16,8 +16,6 @@ import static com.example.oauth2backend.utill.constrains.Message.USER_SAVED;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
-    private final ModelMapper modelMapper;
-
 
     private final UserRepository userRepository;
 
@@ -33,18 +31,4 @@ public class UserServiceImpl implements UserService{
     public Optional<UserEntity> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-//    @Override
-//    public ResponseApi saveUser(UserRequestDto userRequestDto) {
-//        ResponseApi responseApi= new ResponseApi<>();
-////        var user=UserEntity.builder()
-////                .email(userRequestDto.getEmail())
-////                .firstName(userRequestDto.getFirstName())
-////                        .build();
-////        userRepository.save(user);
-//        UserEntity user = modelMapper.map(userRequestDto, UserEntity.class);
-//        userRepository.save(user);
-//        responseApi.setCode(HttpStatus.ACCEPTED.value());
-//        responseApi.setMessage(USER_SAVED);
-//        return responseApi;
-//    }
 }

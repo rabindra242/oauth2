@@ -24,4 +24,13 @@ public class ExcleController {
         response.setHeader("Content-Disposition","attachment:filename=contents.xls");
         IOUtils.copy(byteArrayInputStream,response.getOutputStream());
     }
+
+    @GetMapping("/downloadUserExcleFile")
+    public void downLoadUserExcleFile(HttpServletResponse response) throws IOException {
+        var data=dbToExcleService.getAllFormData();
+        ByteArrayInputStream byteArrayInputStream=dbToExcleService.export(data);
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition","attachment:filename=contents.xls");
+        IOUtils.copy(byteArrayInputStream,response.getOutputStream());
+    }
 }
