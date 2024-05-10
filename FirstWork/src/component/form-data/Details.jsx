@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import axiosInstance from "../../axiosInstance.js";
+import Navbar from "../../commons/Navbar.jsx";
 
 const TableComponent = () => {
     const [data, setData] = useState([]);
@@ -21,6 +22,7 @@ const TableComponent = () => {
 
     return (
         <div>
+        <Navbar/>
             {data.length > 0 ? (
                 <table>
                     <thead>

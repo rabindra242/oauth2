@@ -1,6 +1,8 @@
 package com.example.oauth2backend.controller;
 
 import com.example.oauth2backend.utill.excle.DbToExcleService;
+import com.example.oauth2backend.utill.excle.UserDetailsExcelUtil;
+import com.example.oauth2backend.utill.responseapi.ResponseApi;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
@@ -16,7 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExcleController {
     private final DbToExcleService dbToExcleService;
-    @GetMapping("/downloadExcleFile")
+    private final UserDetailsExcelUtil userDetailsExcelUtil;
+    @GetMapping("/downloadExcelFile")
     public void downLoadExcleFile(HttpServletResponse response) throws IOException {
         var data=dbToExcleService.getAllFormData();
         ByteArrayInputStream byteArrayInputStream=dbToExcleService.export(data);
@@ -24,11 +27,10 @@ public class ExcleController {
         response.setHeader("Content-Disposition","attachment:filename=contents.xls");
         IOUtils.copy(byteArrayInputStream,response.getOutputStream());
     }
-
-    @GetMapping("/downloadUserExcleFile")
+    @GetMapping("/downloadUserExcelFile")
     public void downLoadUserExcleFile(HttpServletResponse response) throws IOException {
-        var data=dbToExcleService.getAllFormData();
-        ByteArrayInputStream byteArrayInputStream=dbToExcleService.export(data);
+        var data=userDetailsExcelUtil.getAllUserDetails();
+        ByteArrayInputStream byteArrayInputStream=userDetailsExcelUtil.exportUserDB(data);
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition","attachment:filename=contents.xls");
         IOUtils.copy(byteArrayInputStream,response.getOutputStream());

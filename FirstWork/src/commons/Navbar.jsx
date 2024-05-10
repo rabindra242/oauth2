@@ -129,14 +129,25 @@ function NavScrollExample() {
     // Function to handle logout
     const handleLogout = async () => {
         try {
+            console.log("edee");
             await axiosInstance.post("/logout");
-            // Clear user data
-            setUserEmail("");
+
+            // Clear each cookie
+            document.cookie.split(";").forEach((cookie) => {
+                const cookieName = cookie.split("=")[0].trim();
+                document.cookie = `${cookieName}=;expires=${new Date(0).toUTCString()};path=/`;
+            });
+
+            setUserEmail(""); // Clear user data
+
             // Redirect to home/login page
+            // Add your redirection code here
+
         } catch (error) {
             console.error("Error logging out:", error);
         }
     };
+
 
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
@@ -156,7 +167,9 @@ function NavScrollExample() {
                     {/* Display user credentials */}
                     {userEmail && <Nav.Link>{userEmail}</Nav.Link>}
                     {/* Logout button */}
-                    <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                    <Nav.Link  onClick={handleLogout}>Logout</Nav.Link>
+
+                    <Nav.Link href="/login">Login</Nav.Link>
                 </Navbar.Collapse>
             </Container>
         </Navbar>

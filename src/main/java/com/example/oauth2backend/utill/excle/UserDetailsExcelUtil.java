@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class UserDetailsExcelUtil implements UserDetailDbtoMySQL {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
+
     @Override
     public ByteArrayInputStream exportUserDB(List<UserRequestDto> userRequestDtoList) {
         try (Workbook workbook = new XSSFWorkbook()){
@@ -37,7 +38,7 @@ public class UserDetailsExcelUtil implements UserDetailDbtoMySQL {
             cell = row.createCell(2);
             cell.setCellValue("Email");
             cell = row.createCell(4);
-            cell.setCellValue("Password");
+            cell.setCellValue("PhoneNumber");
             cell = row.createCell(5);
             cell.setCellValue("Picture");
             for(int i=0;i<userRequestDtoList.size();i++){
@@ -66,6 +67,6 @@ public class UserDetailsExcelUtil implements UserDetailDbtoMySQL {
         List<UserEntity> list=userRepository.findAll();
         return list.stream()
                 .map(li->modelMapper.map(li,UserRequestDto.class))
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
     }
 }

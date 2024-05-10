@@ -2,6 +2,7 @@ package com.example.oauth2backend.config;
 
 import com.example.oauth2backend.entity.UserEntity;
 import com.example.oauth2backend.service.UserService;
+import com.example.oauth2backend.utill.email.EmailConfig;
 import com.example.oauth2backend.utill.enumeration.RegistrationSource;
 import com.example.oauth2backend.utill.enumeration.Role;
 import jakarta.servlet.ServletException;
@@ -25,6 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private final UserService userService;
+
         @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken auth2Authentication = (OAuth2AuthenticationToken) authentication;
@@ -36,6 +38,8 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
             String email = attributes.getOrDefault("email", "").toString();
             String name = attributes.getOrDefault("name", "").toString();
             String picture = attributes.getOrDefault("picture", "").toString();
+
+
 
             userService.findByEmail(email).ifPresentOrElse(user -> {
                 if (user.getRole() != null) {
