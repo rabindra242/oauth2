@@ -163,6 +163,7 @@ function NavScrollExample() {
                         <Nav.Link href="/home">Home</Nav.Link>
                         <Nav.Link href="/form">Form</Nav.Link>
                         <Nav.Link href="/form-data"> Form Details</Nav.Link>
+                        <Nav.Link href="/bulk">Bulk </Nav.Link>
                     </Nav>
                     {/* Display user credentials */}
                     {userEmail && <Nav.Link>{userEmail}</Nav.Link>}

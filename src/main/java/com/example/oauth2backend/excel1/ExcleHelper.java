@@ -1,5 +1,6 @@
 package com.example.oauth2backend.excel1;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -15,7 +16,8 @@ import java.util.List;
 
 public class ExcleHelper {
 
-    public static String TYPE="application/vnd.ms-excel";
+    public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
     static String[] headers={"id","firstName","lastName","email","gender","contactNo","country","dob"};
     public static String SHEET="customers";
 

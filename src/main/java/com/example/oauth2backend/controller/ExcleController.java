@@ -1,5 +1,7 @@
 package com.example.oauth2backend.controller;
 
+import com.example.oauth2backend.excel1.CustomersRepo;
+import com.example.oauth2backend.excel1.ExportToExcel;
 import com.example.oauth2backend.utill.excle.DbToExcleService;
 import com.example.oauth2backend.utill.excle.UserDetailsExcelUtil;
 import com.example.oauth2backend.utill.responseapi.ResponseApi;
@@ -19,6 +21,8 @@ import java.util.List;
 public class ExcleController {
     private final DbToExcleService dbToExcleService;
     private final UserDetailsExcelUtil userDetailsExcelUtil;
+    private final ExportToExcel export;
+    private final CustomersRepo customersRepo;
     @GetMapping("/downloadExcelFile")
     public void downLoadExcleFile(HttpServletResponse response) throws IOException {
         var data=dbToExcleService.getAllFormData();
@@ -33,6 +37,13 @@ public class ExcleController {
         ByteArrayInputStream byteArrayInputStream=userDetailsExcelUtil.exportUserDB(data);
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition","attachment:filename=contents.xls");
+        IOUtils.copy(byteArrayInputStream,response.getOutputStream());
+    }
+    @GetMapping("/downloadCustomerExcelFile")
+    public void downloadCustomerExcleFile(HttpServletResponse response) throws IOException {
+        var data=export.getAllFormData();
+        ByteArrayInputStream byteArrayInputStream=export.exportUserDb(data);
+        response.setContentType("application/vnd.ms-excel");
         IOUtils.copy(byteArrayInputStream,response.getOutputStream());
     }
 }

@@ -1,16 +1,22 @@
-
 import {Container, Row, Col, Card, CardBody, CardTitle, CardText, Button} from 'reactstrap';
 import axiosInstance from "../axiosInstance.js";
-import {useRef} from "react";
+import {useRef, useState} from "react";
 
 
 function Home() {
-    const fileInputRef = useRef(null);
+    // const fileInputRef = useRef(null);
+    const [file,setFile] = useState(null)
 
-    const uploadFile = async (event) => {
-        const file = event.target.files[0];
+    const uploadFile = (event) => {
+        const dataFile = event.target.files[0];
+        setFile(dataFile)
+    };
+
+    const handleUploadButtonClick = async() => {
+        console.log(file)
         const formData = new FormData();
         formData.append('file', file);
+        console.log(formData)
         try {
             await axiosInstance.post('/file/post', formData, {
                 headers: {
@@ -23,10 +29,6 @@ function Home() {
             console.error('Error uploading file:', error);
             // Add error handling here
         }
-    };
-
-    const handleUploadButtonClick = () => {
-        fileInputRef.current.click();
     };
     const downloadExcel = async () => {
         await axiosInstance({
@@ -106,9 +108,9 @@ function Home() {
                             <CardTitle tag="h5">Post</CardTitle>
                             <input
                                 type="file"
-                                ref={fileInputRef}
+                                // ref={fileInputRef}
                                 onChange={uploadFile}
-                                style={{ display: 'none' }} // Hide the input field
+                                // style={{ display: 'none' }} // Hide the input field
                             />
                             <Button color="primary" onClick={handleUploadButtonClick}>
                                 Upload File

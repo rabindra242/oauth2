@@ -1,6 +1,8 @@
 package com.example.oauth2backend.excel1;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,9 +16,14 @@ public class CustomerService {
 
     public void save(MultipartFile file) throws IOException {
         try {
-            List<Customers> customersList=ExcleHelper.excelToTutorials(file.getInputStream()){
-                customersRepo.save(customersList);
-            }
+            List<Customers>customersList=ExcleHelper.excelToTutorials(file.getInputStream());
+                customersRepo.saveAll(customersList);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+    }
+
+    public Page<Customers> findProductWithPagination(int offset, int pageSize){
+        return customersRepo.findAll(PageRequest.of(offset,pageSize));
     }
 }

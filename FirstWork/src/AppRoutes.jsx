@@ -9,6 +9,7 @@ import Register from "./component/register/Register.jsx";
 import Forms from "./component/form/Forms.jsx";
 import NavScrollExample from "./commons/Navbar.jsx";
 import Details from "./component/form-data/Details.jsx";
+import Bulk from "./component/bulk/Bulk.jsx";
 
 // import OAuthLogin from './component/login/OAuthLogin'
 
@@ -22,6 +23,7 @@ function AppRoutes() {
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/form" element={<><NavScrollExample/><Forms/></>}/>
                 <Route path="/form-data" element={<Details/>}/>
+                <Route path="/bulk" element={<Bulk/>}/>
             </Routes>
         </BrowserRouter>
     )
