@@ -1,11 +1,33 @@
 
-import axios from 'axios';
 import {Container, Row, Col, Card, CardBody, CardTitle, CardText, Button} from 'reactstrap';
 import axiosInstance from "../axiosInstance.js";
-// import {string} from "yup";
-// import {l} from "vite/dist/node/types.d-aGj9QkWt.js";
+import {useRef} from "react";
+
 
 function Home() {
+    const fileInputRef = useRef(null);
+
+    const uploadFile = async (event) => {
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+        try {
+            await axiosInstance.post('/file/post', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log("File uploaded successfully");
+            // Add any success handling here
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            // Add error handling here
+        }
+    };
+
+    const handleUploadButtonClick = () => {
+        fileInputRef.current.click();
+    };
     const downloadExcel = async () => {
         await axiosInstance({
             url: '/downloadExcelFile',
@@ -50,7 +72,10 @@ function Home() {
             .catch(error=>{
                 console.error("Error downloading the excelfile:",error)
             })
-    }
+    };
+
+
+
 
     return (
         <Container className="my-5">
@@ -72,6 +97,22 @@ function Home() {
                             <CardTitle tag="h5">Users Data</CardTitle>
                             <CardText>This is the users data in csv format it is the data save by the user</CardText>
                             <Button color="primary" onClick={downloadUserExcel} >Download The Excel</Button>
+                        </CardBody>
+                    </Card>
+                </Col>
+                <Col md={6}>
+                    <Card>
+                        <CardBody>
+                            <CardTitle tag="h5">Post</CardTitle>
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={uploadFile}
+                                style={{ display: 'none' }} // Hide the input field
+                            />
+                            <Button color="primary" onClick={handleUploadButtonClick}>
+                                Upload File
+                            </Button>
                         </CardBody>
                     </Card>
                 </Col>

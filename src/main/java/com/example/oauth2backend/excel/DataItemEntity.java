@@ -27,7 +27,6 @@ public class DataItemEntity {
     private LocalDate dateOfBirth;
     private String jobType;
     private String gender;
-    private String email;
 
 
 }

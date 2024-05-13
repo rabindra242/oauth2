@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,11 +42,12 @@ public class ExcleUtil implements DbToExcleService {
             cell.setCellValue("jobType");
             cell = row.createCell(4);
             cell.setCellValue("gender");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             for (int i = 0; i < dataEntities.size(); i++) {
                 Row dataRow = sheet.createRow(i + 1);
                 dataRow.createCell(0).setCellValue(dataEntities.get(i).getId());
                 dataRow.createCell(1).setCellValue(dataEntities.get(i).getPhoneNumber());
-                dataRow.createCell(2).setCellValue(dataEntities.get(i).getDateOfBirth());
+                dataRow.createCell(2).setCellValue(dataEntities.get(i).getDateOfBirth().format(formatter));
                 dataRow.createCell(3).setCellValue(dataEntities.get(i).getJobType());
                 dataRow.createCell(4).setCellValue(dataEntities.get(i).getGender());
             }
