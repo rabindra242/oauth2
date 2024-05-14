@@ -1,37 +1,51 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Card, CardBody, CardText, CardTitle, Col, Container, Row, Table} from 'reactstrap';
 import axiosInstance from '../../axiosInstance.js';
 import Navbar from "../../commons/Navbar.jsx";
 
 function Bulk() {
     const [file, setFile] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState([]);
     const pageSize = 10; // Assuming pageSize is always 10
 
-    const fetchData = async () => {
-        try {
-            const response = await axiosInstance.get(`customers/getAllCustomer/${(currentPage - 1) * pageSize}/${pageSize}`);
-            setData(response.data.response);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
+
+    useEffect(()=>{
+        const fetchData = async () => {
+            try {
+                const response = await axiosInstance.get(`customers/getAllCustomer/${currentPage}/${pageSize}`);
+                setData(response.data.response);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData()
+    },[currentPage])
+
+        // const fetchData = async () => {
+        //     try {
+        //         const response = await axiosInstance.get(`customers/getAllCustomer/${currentPage}/${pageSize}`);
+        //         setData(response.data.response);
+        //     } catch (error) {
+        //         console.error('Error fetching data:', error);
+        //     }
+        // };
 
     const handleGetButtonClick = () => {
-        fetchData();
+        setCurrentPage(0)
+        // fetchData();
     };
 
     const handlePreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-            fetchData();
+        if (currentPage >= 1) {
+            setCurrentPage(currentPage => currentPage - 1);
+            // fetchData();
         }
     };
 
     const handleNextPage = () => {
-        setCurrentPage(currentPage + 1);
-        fetchData();
+        setCurrentPage(currentPage => currentPage + 1);
+        // fetchData();
     };
 
 
@@ -111,16 +125,19 @@ function Bulk() {
                     </Card>
                     <Card>
                         <CardBody>
-                            <CardTitle tag="h5">Get</CardTitle>
-                            <Button color="primary" onClick={handleGetButtonClick}>
-                                Get Data
-                            </Button>
-                            <Button color="primary" onClick={handlePreviousPage} disabled={currentPage === 1}>
-                                Previous Page
-                            </Button>
-                            <Button color="primary" onClick={handleNextPage}>
-                                Next Page
-                            </Button>
+                            <CardTitle tag="h5">Customers Data</CardTitle>
+                            {/*<Button color="primary" onClick={handleGetButtonClick}>*/}
+                            {/*    Get Data*/}
+                            {/*</Button>*/}
+                            <div style={{display: "flex",gap: "0.8rem"}}>
+                                <Button color="primary" onClick={handlePreviousPage} disabled={currentPage === 0}>
+                                    Previous Page
+                                </Button>
+                                <Button color="primary" onClick={handleNextPage}>
+                                    Next Page
+                                </Button>
+                            </div>
+
                         </CardBody>
                     </Card>
                 </Col>

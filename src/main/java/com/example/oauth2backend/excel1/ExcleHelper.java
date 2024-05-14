@@ -22,8 +22,7 @@ public class ExcleHelper {
     public static String SHEET="customers";
 
 
-    public static boolean hasExcleFormat(MultipartFile file){
-        if(!TYPE.equals(file.getContentType())){
+    public static boolean hasExcleFormat(MultipartFile file){if(!TYPE.equals(file.getContentType())){
             return false;
         }
         return true;
