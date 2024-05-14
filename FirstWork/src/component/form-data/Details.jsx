@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import axiosInstance from "../../axiosInstance.js";
 import Navbar from "../../commons/Navbar.jsx";
 
 const TableComponent = () => {
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetchData();
@@ -14,42 +15,44 @@ const TableComponent = () => {
         try {
             const response = await axiosInstance.get('/get-formData');
             setData(response.data.response);
-            console.log(response.data.response)
+            setLoading(false);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            setError('Error fetching data');
+            setLoading(false);
         }
     };
 
     return (
         <div>
-        <Navbar/>
-            {data.length > 0 ? (
-                <table>
+            <Navbar />
+            {error && <p>{error}</p>}
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                <table style={{ borderCollapse: 'collapse', width: '100%', marginTop: '20px' }}>
                     <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Phone Number</th>
-                        <th>Date of Birth</th>
-                        <th>Job Type</th>
-                        <th>Gender</th>
-                        <th>Email</th>
+                    <tr style={{ backgroundColor: '#f2f2f2' }}>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', fontWeight: 'bold', textAlign: 'left' }}>ID</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', fontWeight: 'bold', textAlign: 'left' }}>Phone Number</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', fontWeight: 'bold', textAlign: 'left' }}>Date of Birth</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', fontWeight: 'bold', textAlign: 'left' }}>Job Type</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', fontWeight: 'bold', textAlign: 'left' }}>Gender</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', fontWeight: 'bold', textAlign: 'left' }}>Email</th>
                     </tr>
                     </thead>
                     <tbody>
                     {data.map((item) => (
-                        <tr key={item.email}>
-                            {/*<td>{item.id}</td>*/}
-                            <td>{item.phoneNumber}</td>
-                            <td>{item.dateOfBirth}</td>
-                            <td>{item.jobType}</td>
-                            <td>{item.gender}</td>
-                            <td>{item.email}</td>
+                        <tr key={item.email} style={{ backgroundColor: (data.indexOf(item) % 2 === 0) ? '#f2f2f2' : 'white' }}>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{item.id}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{item.phoneNumber}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{item.dateOfBirth}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{item.jobType}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{item.gender}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{item.email}</td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
-            ) : (
-                <p>Loading...</p>
             )}
         </div>
     );

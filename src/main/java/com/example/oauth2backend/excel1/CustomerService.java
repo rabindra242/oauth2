@@ -23,7 +23,7 @@ public class CustomerService {
         }
     }
 
-    public Page<Customers> findProductWithPagination(int offset, int pageSize){
-        return customersRepo.findAll(PageRequest.of(offset,pageSize));
+    public Page<Customers> findProductWithPagination(int pageNumber, int pageSize){
+        return customersRepo.findAll(PageRequest.of(pageNumber,pageSize));
     }
 }

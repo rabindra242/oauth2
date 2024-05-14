@@ -6,8 +6,34 @@ import Navbar from "../../commons/Navbar.jsx";
 function Bulk() {
     const [file, setFile] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10); // Set your desired page size
-    const [data, setData] = useState([]); // Change to an empty array
+    const [data, setData] = useState([]);
+    const pageSize = 10; // Assuming pageSize is always 10
+
+    const fetchData = async () => {
+        try {
+            const response = await axiosInstance.get(`customers/getAllCustomer/${(currentPage - 1) * pageSize}/${pageSize}`);
+            setData(response.data.response);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    const handleGetButtonClick = () => {
+        fetchData();
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+            fetchData();
+        }
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+        fetchData();
+    };
+
 
     const uploadFile = (event) => {
         const dataFile = event.target.files[0];
@@ -56,30 +82,6 @@ function Bulk() {
         }
     };
 
-    const fetchData = async () => {
-        try {
-            const response = await axiosInstance.get(`customers/getAllCustomer/${(currentPage - 1) * pageSize}/${pageSize}`);
-            console.log(response.data); // Log or set your data here
-            setData(response.data.response); // Set data to the response array
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
-
-    const handleGetButtonClick = () => {
-        fetchData();
-    };
-
-    const handlePreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-
-    const handleNextPage = () => {
-        // Assuming you always get pageSize items from the API
-        setCurrentPage(currentPage + 1);
-    };
 
     return (
         <>

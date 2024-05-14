@@ -31,10 +31,10 @@ public class CustomerController {
             return responseApi;
         }
     }
-    @GetMapping("/getAllCustomer/{offSet}/{pageSize}")
-    private ResponseEntity<ResponseApi<List<Customers>>> getProductWithSort(@PathVariable int offSet, @PathVariable int pageSize){
+    @GetMapping("/getAllCustomer/{pageNumber}/{pageSize}")
+    private ResponseEntity<ResponseApi<List<Customers>>> getProductWithSort(@PathVariable int pageNumber, @PathVariable int pageSize){
         ResponseApi<List<Customers>> responseApi = new ResponseApi<>();
-        Page<Customers> customersWithPagination = customerService.findProductWithPagination(offSet, pageSize);
+        Page<Customers> customersWithPagination = customerService.findProductWithPagination(pageNumber, pageSize);
         List<Customers> customersList = customersWithPagination.getContent();
         if (customersList.size() > pageSize) {
             customersList = customersList.subList(0, pageSize);
