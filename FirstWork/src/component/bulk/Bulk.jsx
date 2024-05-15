@@ -101,8 +101,8 @@ function Bulk() {
         <>
             <Navbar/>
         <Container className="my-5">
-            <Row>
-                <Col md={6}>
+            <Row className="mb-sm-2">
+                <Col >
                     <Card>
                         <CardBody>
                             <CardTitle tag="h5">Post</CardTitle>
@@ -115,14 +115,30 @@ function Bulk() {
                             </Button>
                         </CardBody>
                     </Card>
+                </Col>
+                <Col>
+                    {/*<Card>*/}
+                    {/*    <img src="https://via.placeholder.com/500x300" alt="Product" className="card-img-top"/>*/}
+                    {/*    <CardBody>*/}
+                    {/*        <CardTitle tag="h5">Users Data</CardTitle>*/}
+                    {/*        <CardText>This is the users data in csv format it is the data save by the user</CardText>*/}
+                    {/*        <Button color="primary"  onClick={downloadCustomerExcel}>Download The Excel</Button>*/}
+                    {/*    </CardBody>*/}
+                    {/*</Card>*/}
                     <Card>
-                        <img src="https://via.placeholder.com/500x300" alt="Product" className="card-img-top"/>
                         <CardBody>
-                            <CardTitle tag="h5">Users Data</CardTitle>
-                            <CardText>This is the users data in csv format it is the data save by the user</CardText>
+                            <CardTitle tag="h5">User Data</CardTitle>
+                            {/*<input*/}
+                            {/*    type="file"*/}
+                            {/*    onChange={uploadFile}*/}
+                            {/*/>*/}
                             <Button color="primary"  onClick={downloadCustomerExcel}>Download The Excel</Button>
                         </CardBody>
                     </Card>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
                     <Card>
                         <CardBody>
                             <CardTitle tag="h5">Customers Data</CardTitle>
@@ -140,10 +156,6 @@ function Bulk() {
 
                         </CardBody>
                     </Card>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
                     {data.length > 0 && ( // Check if data array is not empty
                         <Table>
                             <thead>

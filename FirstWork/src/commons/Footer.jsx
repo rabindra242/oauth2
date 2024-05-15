@@ -1,5 +1,4 @@
 function Footer(){
-
     return <div>
         <div
             className="bottom-0 d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
@@ -23,5 +22,4 @@ function Footer(){
         </div>
     </div>
 }
-
 export default Footer;
