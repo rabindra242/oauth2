@@ -1,0 +1,38 @@
+server:
+  port: 8081
+spring:
+  servlet:
+    multipart:
+      max-file-size: 3MB
+      max-request-size: 3MB
+  application:
+    name: OAuth2 production
+  security:
+    oauth2:
+      client:
+        registration:
+          #          github:
+          #            client-id: 7fd4344a4f5a21a38196
+          #            client-secret: c39367e51649db5e4cff8b157b1ca66e96baa7a6
+          google:
+            client-id: 837951214916-bgv8eulnacb6g1lujpdco67l316itpf1.apps.googleusercontent.com
+            client-secret: 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
+            client-name: google
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: rabindra242adk@gmail.com
+    password:   pqhy puth eewd kwqg
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/userdb
+    username: root
+    password: Rabin@123
+  jpa:
+    hibernate:
+      ddl-auto: update

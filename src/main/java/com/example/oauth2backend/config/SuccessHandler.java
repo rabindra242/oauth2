@@ -59,7 +59,6 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
             Authentication securtityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
                     auth2Authentication.getAuthorizedClientRegistrationId());
             SecurityContextHolder.getContext().setAuthentication(securtityAuth);
-
         });
         HttpSession httpSession = request.getSession();
         httpSession.setAttribute("email", email);

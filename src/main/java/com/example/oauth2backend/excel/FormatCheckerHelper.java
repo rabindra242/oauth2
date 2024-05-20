@@ -1,9 +1,9 @@
 package com.example.oauth2backend.excel;
 
 import com.example.oauth2backend.entity.FormDataEntity;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,11 +27,11 @@ public class FormatCheckerHelper {
         }
     }
 
-    public static List<DataItemEntity> convertExcleToList(InputStream s) {
+    public static List<DataItemEntity> convertExcelToList(InputStream s) {
         List<DataItemEntity> list = new ArrayList<>();
         try {
-            XSSFWorkbook workbook = new XSSFWorkbook(s);
-            XSSFSheet sheet = workbook.getSheet("FormDataEntries");
+            Workbook workbook = WorkbookFactory.create(s);
+            Sheet sheet = workbook.getSheet("FormDataEntries");
             int rowNumber = 0;
             Iterator<Row> rowIterator = sheet.iterator();
             while (rowIterator.hasNext()) {
@@ -49,8 +49,7 @@ public class FormatCheckerHelper {
                     switch (cellNumber) {
                         case 0:
                             if (cell.getCellType() == CellType.NUMERIC) {
-                                // Handle numeric value
-                                formDataEntity.setId((int)cell.getNumericCellValue());
+                                formDataEntity.setId((int) cell.getNumericCellValue());
                             } else {
                                 formDataEntity.setId(Integer.valueOf(cell.getStringCellValue()));
                             }
@@ -61,7 +60,6 @@ public class FormatCheckerHelper {
                         case 2:
                             String dobString;
                             if (cell.getCellType() == CellType.NUMERIC) {
-                                // Handle numeric value
                                 dobString = String.valueOf(cell.getNumericCellValue());
                             } else {
                                 dobString = cell.getStringCellValue();

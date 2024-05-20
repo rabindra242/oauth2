@@ -14,7 +14,7 @@ public class DataEntityService {
     private final DataEntityRepository dataEntityRepository;
 
     public void save(MultipartFile file) throws IOException {
-        List<DataItemEntity> dataItemEntities=FormatCheckerHelper.convertExcleToList(file.getInputStream());
+        List<DataItemEntity> dataItemEntities=FormatCheckerHelper.convertExcelToList(file.getInputStream());
         dataEntityRepository.saveAll(dataItemEntities);
 
     }
