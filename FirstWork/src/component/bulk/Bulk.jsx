@@ -53,9 +53,36 @@ function Bulk() {
         const dataFile = event.target.files[0];
         setFile(dataFile);
     };
+    const uploadFileNew = (event) => {
+        const dataFile = event.target.files[0];
+        setFile(dataFile);
+    };
     const downloadCustomerExcel=async ()=>{
         await axiosInstance({
             url:'/downloadCustomerExcelFile',
+            method:'GET',
+            responseType:'blob',
+            headers: {
+                'Content-Type': 'application/vnd.ms-excel'
+            }
+        }).then(
+            response=>{
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const  link=document.createElement('a');
+                link.href=url;
+                link.setAttribute("download","Customer.xls");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        )
+            .catch(error=>{
+                console.error("Error downloading the excelfile:",error)
+            })
+    };
+    const downloadFormat=async ()=>{
+        await axiosInstance({
+            url:'/downloadFormat',
             method:'GET',
             responseType:'blob',
             headers: {
@@ -84,6 +111,24 @@ function Bulk() {
         console.log(formData);
         try {
             await axiosInstance.post('/customers/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log('File uploaded successfully');
+            // Add any success handling here
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            // Add error handling here
+        }
+    };
+    const handleUploadButtonClick1 = async () => {
+        console.log(file);
+        const formData = new FormData();
+        formData.append('file', file);
+        console.log(formData);
+        try {
+            await axiosInstance.post('/excel/file/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -133,6 +178,25 @@ function Bulk() {
                             {/*    onChange={uploadFile}*/}
                             {/*/>*/}
                             <Button color="primary"  onClick={downloadCustomerExcel}>Download The Excel</Button>
+                        </CardBody>
+                    </Card>
+
+                    <Card>
+                        <CardBody>
+                            <CardTitle tag="h5">Download Empty Format</CardTitle>
+                            <Button color="primary"  onClick={downloadFormat}>Download Empty Format</Button>
+                        </CardBody>
+                    </Card>
+                    <Card>
+                        <CardBody>
+                            <CardTitle tag="h5">Upload New</CardTitle>
+                            <input
+                                type="file"
+                                onChange={uploadFileNew}
+                            />
+                            <Button color="primary" onClick={handleUploadButtonClick1}>
+                                Upload New File
+                            </Button>
                         </CardBody>
                     </Card>
                 </Col>

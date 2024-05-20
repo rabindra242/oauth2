@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ExcleHelper {
 
-    public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    public static String TYPE = "application/vnd.ms-excel";
 
     static String[] headers={"id","firstName","lastName","email","gender","contactNo","country","dob"};
     public static String SHEET="customers";

@@ -14,7 +14,7 @@ import java.util.List;
 public class CustomerService {
     private final CustomersRepo customersRepo;
 
-    public void save(MultipartFile file) throws IOException {
+    public void save(MultipartFile file) {
         try {
             List<Customers>customersList=ExcleHelper.excelToTutorials(file.getInputStream());
                 customersRepo.saveAll(customersList);
