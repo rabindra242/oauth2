@@ -237,8 +237,7 @@ function Bulk() {
                             {data.map((item, index) => (
                                 <tr key={index}>
                                     <th scope="row">{item.id}</th>
-                                    <td>{item.firstName}</td>
-                                    <td>{item.lastName}</td>
+                                    <td>{item.name}</td>
                                     <td>{item.email}</td>
                                     <td>{item.gender}</td>
                                     <td>{item.contactNo}</td>

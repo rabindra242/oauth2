@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+
+import static com.example.oauth2backend.excel1.ExcleHelper.hasExcleFormat;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/excel/file")
@@ -20,15 +23,11 @@ public class ExcelUploadController {
     @PostMapping("/upload")
     public ResponseApi<Customers> upload(@RequestParam("file") MultipartFile file) throws IOException {
         ResponseApi responseApi= new ResponseApi();
-        if (ExcleHelper.hasExcleFormat(file)){
+        hasExcleFormat(file);
             excelUploadService.save(file);
             responseApi.setMessage("File uploadedSuccessfully");
             responseApi.setResponse(file.getOriginalFilename());
             return responseApi;
         }
-        else {
-            responseApi.setMessage("File not upload sucessfully");
-            return responseApi;
-        }
-    }
+
 }

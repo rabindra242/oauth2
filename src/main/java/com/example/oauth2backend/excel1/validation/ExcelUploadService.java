@@ -9,7 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static com.example.oauth2backend.excel1.validation.UploadExcelToDB.excelToDb;
+import static com.example.oauth2backend.excel1.validation.UploadExcelToDB.excelToDB;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class ExcelUploadService {
 
     public void save(MultipartFile file) {
         try {
-            List<Customers> customersList= excelToDb(file);
+            List<Customers> customersList= excelToDB(file.getInputStream());
             customersRepo.saveAll(customersList);
         }catch (Exception e){
             e.printStackTrace();

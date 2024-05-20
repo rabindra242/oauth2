@@ -46,13 +46,11 @@ public class ExportTOExcleImpl implements ExportToExcel{
             for (int i=0;i<customerRequestDtos.size();i++){
                 Row dataRow=sheet.createRow(i+1);
                 dataRow.createCell(0).setCellValue(customerRequestDtos.get(i).getId());
-                dataRow.createCell(1).setCellValue(customerRequestDtos.get(i).getFirstName());
-                dataRow.createCell(2).setCellValue(customerRequestDtos.get(i).getLastName());
-                dataRow.createCell(3).setCellValue(customerRequestDtos.get(i).getEmail());
-                dataRow.createCell(4).setCellValue(customerRequestDtos.get(i).getGender());
-                dataRow.createCell(5).setCellValue(customerRequestDtos.get(i).getContactNo());
-                dataRow.createCell(6).setCellValue(customerRequestDtos.get(i).getCountry());
-                dataRow.createCell(7).setCellValue(customerRequestDtos.get(i).getDob());
+                dataRow.createCell(1).setCellValue(customerRequestDtos.get(i).getName());
+                dataRow.createCell(2).setCellValue(customerRequestDtos.get(i).getEmail());
+                dataRow.createCell(3).setCellValue(customerRequestDtos.get(i).getGender());
+                dataRow.createCell(4).setCellValue(customerRequestDtos.get(i).getContactNo());
+                dataRow.createCell(5).setCellValue(customerRequestDtos.get(i).getCountry());
             }
             for (int i=0;i<customerRequestDtos.size();i++){
                 sheet.autoSizeColumn(i);

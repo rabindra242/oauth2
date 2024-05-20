@@ -1,12 +1,9 @@
 package com.example.oauth2backend.excel1.validation;
 
 import com.example.oauth2backend.excel1.Customers;
-import com.example.oauth2backend.excel1.validation.exception.UserIdNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,105 +11,92 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-public class UploadExcelToDB {
-    public static String TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    public static String TYPE_XLS = "application/vnd.ms-excel";
 
-    static String[] headers = {"id", "firstName", "lastName", "email", "gender", "contactNo", "country", "dob"};
-    public static String SHEET = "customers";
+@Slf4j
+public class UploadExcelToDB{
+    public static String TYPE = "application/vnd.ms-excel";
 
-    public static List<Customers> excelToDb(MultipartFile file) throws IOException {
-        String contentType = file.getContentType();
-        InputStream inputStream = file.getInputStream();
-        Workbook workbook = null;
-
+    public static List<Customers> excelToDB(InputStream is) {
         try {
-            if (TYPE_XLSX.equals(contentType)) {
-                workbook = new XSSFWorkbook(inputStream);
-            } else if (TYPE_XLS.equals(contentType)) {
-                workbook = new HSSFWorkbook(new POIFSFileSystem(inputStream));
-            } else {
-                throw new IllegalArgumentException("The provided file format is not supported");
-            }
+            Workbook workbook = WorkbookFactory.create(is);
+            Sheet sheet = workbook.getSheetAt(0);
 
-            Sheet sheet = workbook.getSheet(SHEET);
             Iterator<Row> rows = sheet.iterator();
-            List<Customers> customersList = new ArrayList<>();
-            int rowNum = 0;
+            ArrayList<Customers> employees = new ArrayList<>();
 
+            int rowNumber = 0;
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
-                if (rowNum == 0) {
-                    rowNum++;
+                if (rowNumber == 0) {
+                    rowNumber++;
                     continue;
                 }
 
-                Iterator<Cell> cellsInRow = currentRow.cellIterator();
-                Customers customers = new Customers();
-                int cellIdx = 0;
-
-                while (cellsInRow.hasNext()) {
-                    Cell currentCell = cellsInRow.next();
-                    switch (cellIdx) {
+                Iterator<Cell> cellIterator = currentRow.cellIterator();
+                Customers employee = new Customers();
+                int cellId = 0;
+                while (cellIterator.hasNext()) {
+                    Cell cell = currentRow.getCell(cellId, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+                    switch (cellId) {
                         case 0:
-                            customers.setId((int) currentCell.getNumericCellValue());
-                            if (customers.getId() == null) {
-                                throw new UserIdNotFoundException("User id not found" + cellsInRow);
+                            if (cell.getCellType() == CellType.NUMERIC) {
+                                employee.setId((int) cell.getNumericCellValue());
+                            } else {
+                                throw new IllegalArgumentException("Invalid data type for ID at row " + (rowNumber + 1));
                             }
                             break;
                         case 1:
-                            customers.setFirstName(currentCell.getStringCellValue());
-                            if (customers.getFirstName() == null) {
-                                throw new UserIdNotFoundException("User Name not found" + cellsInRow);
+                            if (cell.getCellType() == CellType.STRING) {
+                                employee.setName(cell.getStringCellValue());
+                            } else {
+                                throw new IllegalArgumentException("Invalid data type for Name at row " + (rowNumber + 1));
                             }
                             break;
                         case 2:
-                            customers.setLastName(currentCell.getStringCellValue());
-                            if (customers.getLastName() == null) {
-                                throw new UserIdNotFoundException("User LastName not found" + cellsInRow);
+                            if (cell.getCellType() == CellType.STRING) {
+                                employee.setEmail(cell.getStringCellValue());
+                            } else {
+                                throw new IllegalArgumentException("Email Error" + (rowNumber + 1));
                             }
                             break;
                         case 3:
-                            customers.setEmail(currentCell.getStringCellValue());
-                            if (customers.getEmail() == null) {
-                                throw new UserIdNotFoundException("User Email not found" + cellsInRow);
+                            if (cell.getCellType() == CellType.STRING) {
+                                employee.setGender(cell.getStringCellValue());
+                            } else {
+                                throw new IllegalArgumentException("Gender Error" + (rowNumber + 1));
                             }
                             break;
                         case 4:
-                            customers.setGender(currentCell.getStringCellValue());
-                            if (customers.getGender() == null) {
-                                throw new UserIdNotFoundException("User Gender not found" + cellsInRow);
+                            if (cell.getCellType() == CellType.STRING) {
+                                employee.setContactNo(cell.getStringCellValue());
+                            } else {
+                                throw new IllegalArgumentException("Contact no error" + (rowNumber + 1));
                             }
                             break;
                         case 5:
-                            customers.setContactNo(String.valueOf(currentCell.getNumericCellValue()));
-                            if (customers.getContactNo() == null) {
-                                throw new UserIdNotFoundException("User Contact not found" + cellsInRow);
+                            if (cell.getCellType() == CellType.STRING) {
+                                employee.setCountry(cell.getStringCellValue());
+                            } else {
+                                throw new IllegalArgumentException("Country " + (rowNumber + 1));
                             }
                             break;
-                        case 6:
-                            customers.setCountry(currentCell.getStringCellValue());
-                            if (customers.getCountry() == null) {
-                                throw new UserIdNotFoundException("User Country not found" + cellsInRow);
-                            }
-                            break;
+
                         default:
                             break;
                     }
-                    cellIdx++;
+                    cellId++;
                 }
-                customersList.add(customers);
-                rowNum++;
+                employees.add(employee);
+                rowNumber++;
             }
-
-            return customersList;
-
-        } finally {
-            if (workbook != null) {
-                workbook.close();
-            }
-            inputStream.close();
+            workbook.close();
+            return employees;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse Excel file: " + e.getMessage());
         }
     }
+
 }
+

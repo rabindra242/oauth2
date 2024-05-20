@@ -53,21 +53,18 @@ public class ExcleHelper {
                             customers.setId((int)currentCell.getNumericCellValue());
                             break;
                         case 1:
-                            customers.setFirstName(currentCell.getStringCellValue());
+                            customers.setName(currentCell.getStringCellValue());
                             break;
                         case 2:
-                            customers.setLastName(currentCell.getStringCellValue());
-                            break;
-                        case 3:
                             customers.setEmail(currentCell.getStringCellValue());
                             break;
-                        case 4:
+                        case 3:
                             customers.setGender(currentCell.getStringCellValue());
                             break;
-                        case 5:
+                        case 4:
                             customers.setContactNo(currentCell.getStringCellValue());
                             break;
-                        case 6:
+                        case 5:
                             customers.setCountry(currentCell.getStringCellValue());
                             break;
                         default:
