@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Card, CardBody, CardText, CardTitle, Col, Container, Row, Table} from 'reactstrap';
 import axiosInstance from '../../axiosInstance.js';
 import Navbar from "../../commons/Navbar.jsx";
+import {toast, ToastContainer} from "react-toastify";
 
 function Bulk() {
     const [file, setFile] = useState(null);
@@ -110,7 +111,7 @@ function Bulk() {
         formData.append('file', file);
         console.log(formData);
         try {
-            await axiosInstance.post('/customers/upload', formData, {
+            const response=await axiosInstance.post('/customers/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -119,6 +120,7 @@ function Bulk() {
             // Add any success handling here
         } catch (error) {
             console.error('Error uploading file:', error);
+
             // Add error handling here
         }
     };
@@ -128,15 +130,18 @@ function Bulk() {
         formData.append('file', file);
         console.log(formData);
         try {
-            await axiosInstance.post('/excel/file/upload', formData, {
+            const response=await axiosInstance.post('/excel/file/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log('File uploaded successfully');
+            console.log(response);
             // Add any success handling here
         } catch (error) {
-            console.error('Error uploading file:', error);
+            toast.error(error.response?.data?.errorMessage);
+            console.error('Error uploading file:', error?.response?.data?.errorMessage);
+
+
             // Add error handling here
         }
     };
@@ -194,6 +199,18 @@ function Bulk() {
                                 type="file"
                                 onChange={uploadFileNew}
                             />
+                            <ToastContainer
+                                position="top-right"
+                                autoClose={5000}
+                                hideProgressBar={false}
+                                newestOnTop={false}
+                                closeOnClick
+                                rtl={false}
+                                pauseOnFocusLoss
+                                draggable
+                                pauseOnHover
+                                theme="light"
+                            />
                             <Button color="primary" onClick={handleUploadButtonClick1}>
                                 Upload New File
                             </Button>
@@ -224,7 +241,7 @@ function Bulk() {
                         <Table>
                             <thead>
                             <tr>
-                                <th>#</th>
+                                <th>Id</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Email</th>
