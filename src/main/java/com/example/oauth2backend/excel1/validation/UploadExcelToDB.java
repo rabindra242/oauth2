@@ -1,102 +1,127 @@
 package com.example.oauth2backend.excel1.validation;
 
 import com.example.oauth2backend.excel1.Customers;
+import com.example.oauth2backend.excel1.validation.exception.BlankCellException;
+import com.example.oauth2backend.excel1.validation.exception.ExcelFieldValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.web.multipart.MultipartFile;
+import org.apache.poi.ss.util.NumberToTextConverter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
-
 
 @Slf4j
-public class UploadExcelToDB{
+public class UploadExcelToDB {
     public static String TYPE = "application/vnd.ms-excel";
 
-    public static List<Customers> excelToDB(InputStream is) {
+    public static List<Customers> excelToDB(InputStream is) throws IOException {
+        Workbook workbook = null;
         try {
-            Workbook workbook = WorkbookFactory.create(is);
+            workbook = WorkbookFactory.create(is);
             Sheet sheet = workbook.getSheetAt(0);
-
-            Iterator<Row> rows = sheet.iterator();
-            ArrayList<Customers> employees = new ArrayList<>();
+            List<Customers> customers = new ArrayList<>();
 
             int rowNumber = 0;
-            while (rows.hasNext()) {
-                Row currentRow = rows.next();
+            for (Row currentRow : sheet) {
                 if (rowNumber == 0) {
                     rowNumber++;
-                    continue;
+                    continue; // skip header row
                 }
 
-                Iterator<Cell> cellIterator = currentRow.cellIterator();
-                Customers employee = new Customers();
-                int cellId = 0;
-                while (cellIterator.hasNext()) {
-                    Cell cell = currentRow.getCell(cellId, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
-                    switch (cellId) {
+                Customers customer = new Customers();
+                for (int cellIdx = 0; cellIdx < 6; cellIdx++) {
+                    Cell currentCell = currentRow.getCell(cellIdx, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+
+//                    if (currentCell == null || currentCell.getCellType() == CellType.BLANK) {
+//                        String columnName = getColumnName(cellIdx);
+//                        throw new BlankCellException("Blank cell found at row " + (rowNumber + 1) + ", column " + (cellIdx + 1) + " (" + columnName + ")");
+//                    }
+
+                    switch (cellIdx) {
                         case 0:
-                            if (cell.getCellType() == CellType.NUMERIC) {
-                                employee.setId((int) cell.getNumericCellValue());
+                            if (currentCell.getCellType() == CellType.NUMERIC) {
+                                customer.setId((int) currentCell.getNumericCellValue());
                             } else {
-                                throw new IllegalArgumentException("Invalid data type for ID at row " + (rowNumber + 1));
+                                throw new ExcelFieldValidation("Id not found at row " + (rowNumber + 1) + ", column " + (cellIdx + 1));
                             }
                             break;
                         case 1:
-                            if (cell.getCellType() == CellType.STRING) {
-                                employee.setName(cell.getStringCellValue());
+                            if (currentCell.getCellType() == CellType.STRING) {
+                                customer.setName(currentCell.getStringCellValue());
                             } else {
-                                throw new IllegalArgumentException("Invalid data type for Name at row " + (rowNumber + 1));
+                                throw new ExcelFieldValidation("User Name not found at row " + (rowNumber + 1) + ", column " + (cellIdx + 1));
                             }
                             break;
                         case 2:
-                            if (cell.getCellType() == CellType.STRING) {
-                                employee.setEmail(cell.getStringCellValue());
+                            if (currentCell.getCellType() == CellType.STRING) {
+                                customer.setEmail(currentCell.getStringCellValue());
                             } else {
-                                throw new IllegalArgumentException("Email Error" + (rowNumber + 1));
+                                throw new ExcelFieldValidation("Email not found at row " + (rowNumber + 1) + ", column " + (cellIdx + 1));
                             }
                             break;
                         case 3:
-                            if (cell.getCellType() == CellType.STRING) {
-                                employee.setGender(cell.getStringCellValue());
+                            if (currentCell.getCellType() == CellType.STRING) {
+                                customer.setGender(currentCell.getStringCellValue());
                             } else {
-                                throw new IllegalArgumentException("Gender Error" + (rowNumber + 1));
+                                throw new ExcelFieldValidation("Gender not found at row " + (rowNumber + 1) + ", column " + (cellIdx + 1));
                             }
                             break;
                         case 4:
-                            if (cell.getCellType() == CellType.STRING) {
-                                employee.setContactNo(cell.getStringCellValue());
+                            if (currentCell.getCellType() == CellType.NUMERIC) {
+                                customer.setContactNo(NumberToTextConverter.toText(currentCell.getNumericCellValue()));
+                            } else if (currentCell.getCellType() == CellType.STRING) {
+                                customer.setContactNo(currentCell.getStringCellValue());
                             } else {
-                                throw new IllegalArgumentException("Contact no error" + (rowNumber + 1));
+                                throw new ExcelFieldValidation("Contact No not found at row " + (rowNumber + 1) + ", column " + (cellIdx + 1));
                             }
                             break;
                         case 5:
-                            if (cell.getCellType() == CellType.STRING) {
-                                employee.setCountry(cell.getStringCellValue());
+                            if (currentCell.getCellType() == CellType.STRING) {
+                                customer.setCountry(currentCell.getStringCellValue());
                             } else {
-                                throw new IllegalArgumentException("Country " + (rowNumber + 1));
+                                throw new ExcelFieldValidation("Country not found at row " + (rowNumber + 1) + ", column " + (cellIdx + 1));
                             }
                             break;
-
                         default:
                             break;
                     }
-                    cellId++;
                 }
-                employees.add(employee);
+                customers.add(customer);
                 rowNumber++;
             }
-            workbook.close();
-            return employees;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to parse Excel file: " + e.getMessage());
+            return customers;
+        } catch (ExcelFieldValidation e) {
+//            log.error(e.getMessage(), e);
+            throw new ExcelFieldValidation("Excel file validation failed: " + e.getMessage());
+        } finally {
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    log.error("Error closing the workbook", e);
+                }
+            }
         }
     }
 
+//    private static String getColumnName(int index) {
+//        switch (index) {
+//            case 0:
+//                return "Id";
+//            case 1:
+//                return "Name";
+//            case 2:
+//                return "Email";
+//            case 3:
+//                return "Gender";
+//            case 4:
+//                return "Contact No";
+//            case 5:
+//                return "Country";
+//            default:
+//                return "Unknown";
+//        }
+//    }
 }
-
